@@ -1,0 +1,101 @@
+#lang racket
+;;Exercise2
+;Consider the following simple phone book directory.
+;The entire directory is represented as a list of contacts.
+;Each contact is made using the following constructor:
+
+(define (make-contact person phone company)
+  (list person phone company))
+
+(define make-person list)
+
+
+(define sampledata
+  (list (make-contact (make-person "John" "Okot") "07982802" "UBC")
+        (make-contact (make-person "Mary" "Mukasa") "09818181" "KCCA")
+        (make-contact (make-person "James" "Mikisa") "0781919191" "BOU")))
+
+;i .Complete the contacts abstraction by providing the selectors
+;for
+;person,
+;phone
+;number,and
+;company. For example
+
+;(define entry (make-contact (make-person "John" "Okot") "07982802" "UBC"))
+;(person entry) -> ("John" "Okot")
+;(phone-number entry) -> "07982802"
+;(company entry) -> "UBC"
+
+(define person cons)
+(define phone-number cadr)
+(define company cddr)
+(person "Bukenya" "lukman")
+(phone-number (make-contact (make-person "Mary" "Mukasa") "09818181" "KCCA"))
+(company (make-contact (make-person "Mary" "Mukasa") "09818181" "KCCA"))
+
+;ii Complete the person abstraction by providing selectors
+;for first name and other names.
+(define first-name car)
+(define other-names cdr)
+(first-name (make-person "Mary" "Mukasa"))
+(other-names (make-person "Mary" "Mukasa"))
+
+;2.
+;The procedure square-list takes a list of
+;numbers as argument and returns
+;a list of the squares of those numbers.
+
+;(square-list (list 1 2 3 4))
+;(1 4 9 16)
+
+(define (square x)
+  (* x x))
+(define (square-list items)
+  (if (null? items)
+    null
+    (cons (square (car items)) (square-list (cdr items)))))
+(square-list (list 1 2 3 4))
+;;using map
+(define (new-square-list items)
+ (map square items))
+(new-square-list (list 1 2 3 4))
+
+;3
+;Static scoping is also called lexical scoping.
+;In this scoping a variable always refers to its top level environment.
+;This is a property of the program text and unrelated to the
+;run time call stack. Static scoping also makes it much easier
+;to make a modular code as programmer
+;can figure out the scope just by looking at the code.
+
+;;Lexical Scopping Example
+(define n 100)
+
+(define (clam)
+   (display "in clam, n=")
+   (display n)
+   (newline))
+
+(define (squid n)
+   (display "in squid, n=")
+   (display n)
+   (newline)
+   (clam))
+(display "in main program, n=")
+(display n) 
+(newline)
+(squid 1)
+(clam)
+
+;In contrast, dynamic scope requires the programmer
+;to anticipate all possible dynamic contexts.
+
+;;Dynamic Scoping
+(define (new-map f s)
+  (if (null? s)
+      '()
+      (cons (f (car s)) (new-map f (cdr s)))))
+
+(let ((s 10))
+  (new-map (lambda (r) (+ r s)) '(1 2 3)))
